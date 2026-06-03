@@ -23,6 +23,12 @@ int calculateParentValue(int index, int* arr) {
 	return arr[parentIndex];
 }
 
+void updateCurrentElementInfo(int index, int* arr, int& level, std::string& type, int& parentValue) {
+	level = calculateLevel(index);
+	type = calculateType(index);
+	parentValue = calculateParentValue(index, arr);
+}
+
 void printPyramidElementInfo(int level, std::string type, int parentValue, int currentValue) {
 	std::cout << level << " " << type << "(" << parentValue << ") " << currentValue << "\n";
 }
@@ -30,7 +36,7 @@ void printPyramidElementInfo(int level, std::string type, int parentValue, int c
 void printPyramid(int* arr, int size) {
 	
 	//print base array
-	std::cout << "Èñõîäíûé ìàññèâ: ";
+	std::cout << "Ð˜ÑÑ…Ð¾Ð´Ð½Ñ‹Ð¹ Ð¼Ð°ÑÑÐ¸Ð²: ";
 	for (int i = 0; i < size; ++i) {
 		std::cout << arr[i];
 		if (i != size - 1)
@@ -44,7 +50,7 @@ void printPyramid(int* arr, int size) {
 	int level{}, parentValue{};
 	std::string type{"root"};
 	
-	std::cout << "Ïèðàìèäà:\n";
+	std::cout << "ÐŸÐ¸Ñ€Ð°Ð¼Ð¸Ð´Ð°:\n";
 	for (int i = 0; i < size; ++i) {
 		if (i == 0) {
 			std::cout << level << " " << type << " " << arr[0] << "\n"; // root
@@ -63,7 +69,7 @@ void printPyramid(int* arr, int size) {
 
 
 //1 left(1) 3
-//1 - óðîâåíü, left/right - ñòîðîíà, (1) - ýòî ðîäèòåëü, 3 - çíà÷åíèå ýëåìåíòà
+//1 - ÑƒÑ€Ð¾Ð²ÐµÐ½ÑŒ, left/right - ÑÑ‚Ð¾Ñ€Ð¾Ð½Ð°, (1) - ÑÑ‚Ð¾ Ñ€Ð¾Ð´Ð¸Ñ‚ÐµÐ»ÑŒ, 3 - Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð°
 
 bool goToLeftChild(int size, int& currIndex) {
 	int childIndex = 2 * currIndex + 1;
@@ -94,54 +100,51 @@ bool goToParent(int* arr, int size, int& currIndex) {
 		return true;
 	}	
 }
+
+
+
 void journeyInPyramid(int* arr, int size) {
 	int currentIndex{}, currentLevel{}, currentParentValue{};
 	std::string currentType{ "root" }, command{};
 	do {
-		std::cout << "Âû íàõîäèòåñü çäåñü: ";
+		std::cout << "Ð’Ñ‹ Ð½Ð°Ñ…Ð¾Ð´Ð¸Ñ‚ÐµÑÑŒ Ð·Ð´ÐµÑÑŒ: ";
 		if (currentIndex == 0) {
 			std::cout << currentLevel << " " << currentType << " " << arr[0] << "\n"; // root
 		}
 		else {
 			printPyramidElementInfo(currentLevel, currentType, currentParentValue, arr[currentIndex]);
 		}
-		std::cout << "Ââåäèòå êîìàíäó: ";
+		std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐºÐ¾Ð¼Ð°Ð½Ð´Ñƒ: ";
 		std::cin >> command;
 		if (command == "right") {
 			if (goToRightChild(size, currentIndex)) {
-				std::cout << "Îê\n";
-				currentType = calculateType(currentIndex);
-				currentLevel = calculateLevel(currentIndex);
-				currentParentValue = calculateParentValue(currentIndex, arr);
+				std::cout << "ÐžÐº\n";
+				updateCurrentElementInfo(currentIndex, arr, currentLevel, currentType, currentParentValue);
 			}
 			else {
-				std::cout << "Îøèáêà! Îòñóòñòâóåò ïðàâûé ïîòîìîê\n";
+				std::cout << "ÐžÑˆÐ¸Ð±ÐºÐ°! ÐžÑ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚ Ð¿Ñ€Ð°Ð²Ñ‹Ð¹ Ð¿Ð¾Ñ‚Ð¾Ð¼Ð¾Ðº\n";
 			}
 		}
 		else if (command == "left") {
 			if (goToLeftChild(size, currentIndex)) {
-				std::cout << "Îê\n";
-				currentType = calculateType(currentIndex);
-				currentLevel = calculateLevel(currentIndex);
-				currentParentValue = calculateParentValue(currentIndex, arr);
+				std::cout << "ÐžÐº\n";
+				updateCurrentElementInfo(currentIndex, arr, currentLevel, currentType, currentParentValue);
 			}
 			else {
-				std::cout << "Îøèáêà! Îòñóòñòâóåò ëåâûé ïîòîìîê\n";
+				std::cout << "ÐžÑˆÐ¸Ð±ÐºÐ°! ÐžÑ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚ Ð»ÐµÐ²Ñ‹Ð¹ Ð¿Ð¾Ñ‚Ð¾Ð¼Ð¾Ðº\n";
 			}
 		}
 		else if (command == "up") {
 			if (goToParent(arr, size, currentIndex)) {
-				std::cout << "Îê\n";
-				currentType = calculateType(currentIndex);
-				currentLevel = calculateLevel(currentIndex);
-				currentParentValue = calculateParentValue(currentIndex, arr);
+				std::cout << "ÐžÐº\n";
+				updateCurrentElementInfo(currentIndex, arr, currentLevel, currentType, currentParentValue);
 			}
 			else {
-				std::cout << "Îøèáêà! Îòñóòñòâóåò ðîäèòåëü\n";
+				std::cout << "ÐžÑˆÐ¸Ð±ÐºÐ°! ÐžÑ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚ Ñ€Ð¾Ð´Ð¸Ñ‚ÐµÐ»ÑŒ\n";
 			}
 		}
 		else {
-			std::cout << "Íåèçâåñòíàÿ êîìàíäà. Ââåäèòå, ïîæàëóéñòà, âåðíóþ: right, left, up èëè exit\n";
+			std::cout << "ÐÐµÐ¸Ð·Ð²ÐµÑÑ‚Ð½Ð°Ñ ÐºÐ¾Ð¼Ð°Ð½Ð´Ð°. Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ, Ð¿Ð¾Ð¶Ð°Ð»ÑƒÐ¹ÑÑ‚Ð°, Ð²ÐµÑ€Ð½ÑƒÑŽ: right, left, up Ð¸Ð»Ð¸ exit\n";
 		}
 	} while (command != "exit");
 }
