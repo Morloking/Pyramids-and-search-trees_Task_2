@@ -139,7 +139,9 @@ void journeyInPyramid(int* arr, int size) {
 			}
 		}
 		else {
-			std::cout << "Неизвестная команда. Введите, пожалуйста, верную: right, left, up или exit\n";
+			if (command != "exit") {
+				std::cout << "Неизвестная команда. Введите, пожалуйста, верную: right, left, up или exit\n";
+			}
 		}
 	} while (command != "exit");
 }
