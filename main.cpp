@@ -45,25 +45,20 @@ void printPyramid(int* arr, int size) {
 	std::cout << "\n";
 
 
-
 	//print pyramid
 	int level{}, parentValue{};
 	std::string type{"root"};
 	
 	std::cout << "Пирамида:\n";
 	for (int i = 0; i < size; ++i) {
+		updateCurrentElementInfo(i, arr, level, type, parentValue);
 		if (i == 0) {
 			std::cout << level << " " << type << " " << arr[0] << "\n"; // root
 			continue;
 		}
-		//calculate level
-		level = calculateLevel(i);
-		//calculate type
-		type = calculateType(i);
-		//calculate parentValue
-		parentValue = calculateParentValue(i, arr);
-		//print result
-		printPyramidElementInfo(level, type, parentValue, arr[i]);
+		else {
+			printPyramidElementInfo(level, type, parentValue, arr[i]);
+		}
 	}
 }
 
